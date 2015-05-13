@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 from datetime import datetime
 
-from mock import patch
+from mock import Mock, patch
 from pretend import stub
 
 import helga_facts as facts
@@ -144,6 +144,32 @@ def test_facts_match_handles_unicode(add_fact, settings):
         with_nick = [['helga ' + args[0][0]] + list(args[0][1:])]
         assert facts.facts_match(client, '', '', '', args) is None
         assert 'ok' == facts.facts_match(client, '', '', '', with_nick)
+
+
+def test_facts_match_ignores_blacklisted_words():
+    patches = {
+        'show_fact': lambda s: s,
+        'BLACKLIST': ['who'],
+        'add_fact': Mock(),
+    }
+
+    with patch.multiple(facts, **patches):
+        assert facts.facts_match(None, '', '', '', [['who', 'is', 'going']]) is None
+        assert not facts.add_fact.called
+
+
+def test_facts_match_reply_does_not_blacklist():
+    patches = {
+        'show_fact': lambda s: s,
+        'BLACKLIST': ['who'],
+        'add_fact': Mock(),
+    }
+
+    parts = ['when', 'is', '<reply>', 'now']
+
+    with patch.multiple(facts, **patches):
+        facts.facts_match(None, '', '', '', [parts])
+        facts.add_fact.assert_called_with('when', 'now', '')
 
 
 @patch('helga_facts.add_fact')

@@ -16,6 +16,10 @@ from helga.plugins import command, match, ACKS
 logger = log.getLogger(__name__)
 
 
+BLACKLIST = getattr(settings, 'FACTS_WORD_BLACKLIST',
+                    ['who', 'what', 'where', 'why', 'how'])
+
+
 def term_regex(term):
     """
     Returns a case-insensitive regex for searching terms
@@ -34,6 +38,10 @@ def show_fact(term):
 
     if record is None:
         return None
+
+    # Fix double spacing in older facts
+    if record['fact']:
+        record['fact'] = record['fact'].replace('  ', ' ')
 
     # If it isn't authored
     if not record.get('set_by', ''):
@@ -120,8 +128,14 @@ def facts_match(client, channel, nick, message, found):
         fact = parts[-1]
     else:
         # This nasty join is to ignore the empty part for <reply>
+        # Also, replace double spaces with a single space
         author = nick
-        fact = ' '.join(parts[:2] + parts[-1:])
+        fact = ' '.join(parts[:2] + parts[-1:]).replace('  ', ' ')
+
+        # Is the match word blacklisted?
+        if parts[0] in BLACKLIST:
+            logger.debug('Ignoring blacklisted fact word %s', parts[0])
+            return
 
     return add_fact(parts[0], fact, author)
 
