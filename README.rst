@@ -41,7 +41,7 @@ can lead to situations where you may see one-word pronoun facts that can be anno
 For this reason, you can customize the setting ``FACTS_WORD_BLACKLIST``, which should be a list of words
 that will result in a fact being stored. Generally this will be pronouns. The default value for this is::
 
-    FACTS_WORD_BLACKLIST = ['who', 'what', 'where', 'when', 'why', 'how']
+    FACTS_WORD_BLACKLIST = ['who', 'what', 'where', 'when', 'why', 'how', 'and', 'hmm', 'huh', 'no', 'oh', 'ok', 'right', 'well', 'yes']
 
 Note that this only occurs for facts that do not include ``<reply>``. This will still work::
 

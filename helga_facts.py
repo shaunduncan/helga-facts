@@ -17,7 +17,7 @@ logger = log.getLogger(__name__)
 
 
 BLACKLIST = getattr(settings, 'FACTS_WORD_BLACKLIST',
-                    ['who', 'what', 'where', 'when', 'why', 'how'])
+                    ['who', 'what', 'where', 'when', 'why', 'how', 'and', 'hmm', 'huh', 'no', 'oh', 'ok', 'right', 'well', 'yes'])
 
 
 def term_regex(term):
