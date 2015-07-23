@@ -27,7 +27,7 @@ if pip_version >= (1, 5):
 
 setup(
     name='helga-facts',
-    version='0.2.1',
+    version='0.2.2',
     description=("A helga plugin that can be used to store responses "
                  "that can be returned from a question"),
     classifiers=[
