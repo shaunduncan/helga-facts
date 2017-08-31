@@ -74,7 +74,6 @@ def add_fact(term, fact, author=''):
             'set_by': author,
             'set_date': time.time()
         })
-        db.facts.ensure_index('term')
 
 
 def forget_fact(term):
